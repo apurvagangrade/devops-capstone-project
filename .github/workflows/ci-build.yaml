@@ -1,4 +1,6 @@
+
 name: CI Build
+
 on:
   push:
     branches:
@@ -9,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Lint and Test
     runs-on: ubuntu-latest
     container: python:3.9-slim
 
@@ -21,14 +24,14 @@ jobs:
           POSTGRES_PASSWORD: pgs3cr3t
           POSTGRES_DB: testdb
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -43,4 +46,4 @@ jobs:
       - name: Run unit tests with nose
         run: nosetests
         env:
-          DATABASE_URI: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
+          DATABASE_URI: postgresql://postgres:pgs3cr3t@postgres:5432/testdb
